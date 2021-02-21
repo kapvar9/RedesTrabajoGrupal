@@ -20,7 +20,7 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
      * Creates new form VentanaEstadoEnlace
      */
     public VentanaEstadoEnlace() {
-        
+        int alava=0;
         initComponents();
         String[] nombres = new String[] {"ROUTER", "ROUTER ANTERIOR", "PESO"};
         model.setColumnIdentifiers(nombres);
