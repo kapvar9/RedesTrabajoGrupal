@@ -22,6 +22,7 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
     public VentanaEstadoEnlace() {
         int alava=0;
         int dol;
+        int cambioooo;
         initComponents();
         String[] nombres = new String[] {"ROUTER", "ROUTER ANTERIOR", "PESO"};
         model.setColumnIdentifiers(nombres);
