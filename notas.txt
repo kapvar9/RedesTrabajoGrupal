@@ -1,0 +1,3 @@
+https://www.ctr.unican.es/asignaturas/eda/cap4-grafos-2en1.pdf
+https://jariasf.wordpress.com/2012/03/19/camino-mas-corto-algoritmo-de-dijkstra/
+https://yoandroide.xyz/grafos-implementacion-algoritmo-dijkstra-en-java/
