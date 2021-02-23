@@ -6,15 +6,12 @@
 package paquete.proyecto;
 
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author maric
  */
 public class VentanaEstadoEnlace extends javax.swing.JFrame {
-    
-    DefaultTableModel model = new DefaultTableModel();
 
     /**
      * Creates new form VentanaEstadoEnlace
@@ -172,7 +169,7 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
         jTextArea.setRows(5);
         jScrollPane2.setViewportView(jTextArea);
 
-        jLabel7.setText("TIEMPO DE EJECUCION:");
+        jLabel7.setText("TIEMPO DE EJECUCION");
 
         txtejcucion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -191,7 +188,7 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
 
         jLabel11.setForeground(new java.awt.Color(0, 102, 102));
 
-        jLabel12.setText("UTILIZACION DE MEMORIA:");
+        jLabel12.setText("UTILIZACION DE MEMORIA");
 
         txtUMemoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -246,15 +243,15 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(29, 29, 29)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(txtejcucion, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(txtUMemoria))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                            .addComponent(jLabel7)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jLabel12))))
+                                            .addComponent(jLabel7))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel12)
+                                            .addComponent(txtUMemoria, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 8, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,28 +324,33 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
     private void btnIngreso_aristaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngreso_aristaActionPerformed
         // TODO add your handling code here:
         
-        //Validacion de ingreso
+        // hallar el tiempo de ejecucion - inicio
         long inicio = System.currentTimeMillis();
+        
+        //Validacion de ingreso: en caso no se haya ingresado datos dentros de las tres cajas de ingreso 
+        // va ha salir un dialogo de mensaje avisando tal cosa.
         if (this.txtCantEnlace.getText().isEmpty() || this.txtCantRouter.getText().isEmpty()||
         this.txtRouterRaiz.getText().isEmpty()){
             
             JOptionPane.showMessageDialog(this, "No ha ingresado correctamento los numeros.");
         }
+        //caso contario, se ha a poder ingresar el router incial, final y el peso.
         else
         {
             //Ingreso de la cantidad de router que hay en la topologia
             int cantRouter=Integer.parseInt(this.txtCantRouter.getText());
-            int tablaEstadoEnlace[][]=new int[cantRouter][cantRouter]; //Se formara la tabla en base a la cantidad de router que se ingrese
-            
-            //Ingreso solo del router raiz
-            int routRaiz=Integer.parseInt(this.txtRouterRaiz.getText());
+            //Se formara una matriz en base a la cantidad de router que se ingrese
+            int tablaEstadoEnlace[][]=new int[cantRouter][cantRouter]; 
             for (int i=0; i<cantRouter; i++)
             {   for (int j=0; j<cantRouter; j++)
                 {
-                    tablaEstadoEnlace[i][j]=1000;
+                    tablaEstadoEnlace[i][j]=1000; // se le ha asignado el valor de 1000 a la matriz tablaEstadoEnlace
                 }
             }
-
+            
+            //Ingreso del router raiz que se va ha elegir por la topologia
+            int routRaiz=Integer.parseInt(this.txtRouterRaiz.getText());
+            
             //Ingreso de la cantidad de enlaces
             int cantEnlace=Integer.parseInt(this.txtCantEnlace.getText());
             for(int i=0;i<cantEnlace;i++)
@@ -359,31 +361,40 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
                 IngresoDeArista(tablaEstadoEnlace);
             }
             
-            
+            //la variable tablaGeneral se le ha asignado el metodo TablaGeneralT
             int [][]tablaGeneral= TablaGeneralT(cantRouter,routRaiz);
+            //Por cada cantidad de router se va llamar al metodo algoritmoDijkstra
             for(int i=0;i<cantRouter;i++){
                 algoritmoDijkstra(cantRouter,tablaGeneral,tablaEstadoEnlace);
             }
             
-            jTextArea.append("Router\tPeso \tRouter anterior\n");
+            // Dentro del jTextArea se formara la tabla de enrutamiento
+            jTextArea.append("Router\tPeso \tRouter anterior\n"); // nombre de las columnas de la tabla
+            // En base a tablaGeneral se formara la tabla, se tomara la longitud para las filas(i)
             for (int i=0; i < tablaGeneral.length; i++) {
                 this.jTextArea.append("\n\n");
-                for (int j=0; j<3; j++) 
+                // seran tres columnas para la tabla 
+                for (int j=0; j<=2; j++) 
                 {
                     this.jTextArea.append(tablaGeneral[i][j]+ "\t");
                 }
             }
-            
+        
+        // hallar el tiempo de ejecucion - fin
         long fin = System.currentTimeMillis();
+        // operacion para hallar el tiempo de ejecucion en segundos
         double tiempo = (double) ((fin - inicio)/1000);
         txtejcucion.setText(tiempo +" segundos");
         
+        //hallar la cantitad total usada de memoria 
         int dataSize= 1024 * 1024;
         Runtime runtime =Runtime.getRuntime();
         txtUMemoria.setText((runtime.totalMemory()-runtime.freeMemory())/dataSize + "MB");
                                
             //fuente: https://yoandroide.xyz/grafos-implementacion-algoritmo-dijkstra-en-java
             //fuente: https://professor-falken.com/programacion/java/como-conocer-la-cantidad-de-memoria-total-usada-y-libre-en-java/
+            //fuente: https://www.discoduroderoer.es/calcular-el-tiempo-de-ejecucion-en-java/
+            //Estas fuentes presentadas se encuentran documentadas en las referencias del reporte tecnico.
         }
     }//GEN-LAST:event_btnIngreso_aristaActionPerformed
 
@@ -399,27 +410,32 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
 
     private void btnEscenario2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscenario2ActionPerformed
         // TODO add your handling code here:
-        //Creamos un objeto con la clase Escenario1
+        //Creamos un objeto con la clase Escenario2
         Escenario2 esc2 = new Escenario2();
         esc2.toFront();
-        //Realiar que es esc1 se vizualice en la ventana principal
+        //Realiar que es esc2 se vizualice en la ventana principal
         esc2.setVisible(true);
     }//GEN-LAST:event_btnEscenario2ActionPerformed
 
     private void btnEscenario3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEscenario3ActionPerformed
         // TODO add your handling code here:
-                //Creamos un objeto con la clase Escenario1
+                //Creamos un objeto con la clase Escenario3
         Escenario3 esc3 = new Escenario3();
         esc3.toFront();
-        //Realiar que es esc1 se vizualice en la ventana principal
+        //Realiar que es esc3 se vizualice en la ventana principal
         esc3.setVisible(true);
     }//GEN-LAST:event_btnEscenario3ActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
+        
+        // Este boton permite que se borre los numeros ingresados dentros de los cinco JTextField y el JTextArea
          this.txtCantEnlace.setText("");
          this.txtCantRouter.setText("");
          this.txtRouterRaiz.setText("");
+         this.jTextArea.setText("");
+         this.txtUMemoria.setText("");
+         this.txtejcucion.setText("");
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void txtejcucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtejcucionActionPerformed
@@ -431,23 +447,26 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUMemoriaActionPerformed
 
-    //Metodos
+    //Metodos que se usaran para el boton ingreso de arista
     private static void IngresoDeArista(int[][]tablaEstadoEnlace ){
-        //En base a los ingresos de del peso, numero del router inicial y final,
-        //se almacenaran en la tablaArista
+        
+        //declaracion de las varibles de inicio(ingresar el router incial), 
+        //final (ingresar el router final), peso(Ingreso del peso)
         int Inicio= Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el numero del router inicial:"));
         int Final= Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el numero del router final:"));
         int Peso= Integer.parseInt(JOptionPane.showInputDialog(null, "Ingrese el peso:"));
+        //de la matriz tablaEstadoEnlace se va almacenar el router de incio y fin
+        // en esta matriz se le esta asignando el valor del peso
         tablaEstadoEnlace[Inicio][Final]=Peso;
         
     }
     //Metodo auxiliar para algoritmoDijsktra
     private int routerConMenorRuta(int n,int[][]tabla){
-        int posicionR=0;
-        int menor =1000;
+        int posicionR=0, vMin=1000;
         for(int i=0; i<n; i++){
-            if(tabla[i][3]!=1 && tabla[i][1]<= menor){
-                menor = tabla[i][1];
+            if(tabla[i][3]!=1 && tabla[i][1]<= vMin){
+                vMin = tabla[i][1];
+                //router con la menor distancia en base a la matriz tabla
                 posicionR=i;   
             }
         }
@@ -455,13 +474,15 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
     }
     //Por cada router se ejecutara el metodo algoritmoDijkstra()
     private void algoritmoDijkstra(int n,int[][]tabla,int[][]tablaEstadoEnlace){
+        // se llama al metodo axuliar routerConMenorRuta, esta ha va ser asignada 
+        // por la variable posicion
         int posicion=routerConMenorRuta(n,tabla);
         tabla[posicion][3]=1;
         for(int i=0;i<n;i++){
             if(tablaEstadoEnlace[posicion][i]!=1000)
-            {
+            {   // en caso de que se cumpla esta condicion
                 if(tablaEstadoEnlace[posicion][i]+tabla[posicion][1]<tabla[i][1])
-                {
+                {   // se va a acumular esta suma en la tabla[i][1] y su posicion en la variable posicion
                     tabla[i][1]= tablaEstadoEnlace[posicion][i] + tabla[posicion][1];
                     tabla[i][2]=posicion;
                 }  
@@ -469,16 +490,20 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
         }
     }
     
-    private int[][] TablaGeneralT(int n,int rInic){
-        
-        int tabla[][]=new int[n][4];
-        for(int i=0;i<n;i++){
+    private int[][] TablaGeneralT(int r,int nRaiz){
+        //En esta tabla se formara las distancias del router inicial y el router
+        //anterior a este,se esta poniendo como router anterior el valor -1,  
+        // ya que el nodo raiz no va a tener no va a tener a un router anterior
+        // y asu vez se esta poniendo como diatancia 0 entres estos dos routers
+        int tabla[][]=new int[r][4];
+        for(int i=0;i<r;i++){
             tabla[i][0]=i;
             tabla[i][1]=1000;
             tabla[i][2]=-1;        
-            tabla[i][3]=0;
+            //tabla[i][3]=0;
         }
-        tabla[rInic][1]=0;
+        //el valor del peso a partir de nraiz(nodo raiz) sera 0 
+        tabla[nRaiz][1]=0;
         return tabla;   
     }
             
@@ -507,7 +532,6 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(VentanaEstadoEnlace.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
