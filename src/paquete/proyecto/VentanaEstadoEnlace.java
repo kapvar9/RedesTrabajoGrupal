@@ -489,10 +489,9 @@ public class VentanaEstadoEnlace extends javax.swing.JFrame {
     }
     
     private int[][] TablaGeneralT(int r,int nRaiz){
-        //En esta tabla se formara las distancias del router inicial y el router
-        //anterior a este,se esta poniendo como router anterior el valor -1,  
-        // ya que el nodo raiz no va a tener no va a tener a un router anterior
-        // y asu vez se esta poniendo como diatancia 0 entres estos dos routers
+        //En esta tabla se formara las distancias del router inicial y 
+        // del proximo salto,se esta colocando el valor -1 al salto al nodo raiz ,  
+        // y asu vez se esta poniendo como diatancia 0 entre estos dos.
         int tabla[][]=new int[r][4];
         for(int i=0;i<r;i++){
             tabla[i][0]=-1; // router
